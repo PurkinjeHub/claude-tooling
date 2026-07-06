@@ -1,0 +1,30 @@
+# Configuration personnelle du serveur MCP LeoMed.
+#
+# Copie ce fichier vers ~/.leomed-mcp/config.toml (ou n'importe où, en
+# pointant la variable d'environnement LEOMED_MCP_CONFIG dessus) et ajuste
+# les chemins pour ton propre environnement WSL.
+#
+# Ne commite JAMAIS ton config.toml — il est propre à ta machine
+# (voir .gitignore).
+
+# Dossier optionnel pour les logs des apps démarrées via ce MCP.
+# Par défaut : ~/.leomed-mcp/logs
+# log_dir = "~/.leomed-mcp/logs"
+
+[apps.hub]
+path = "~/LeoMed-Code/app-leomed/leomed-hub"
+port = 3001
+type = "rails"
+start_cmd = ["bundle", "exec", "rails", "s", "-p", "3001"]
+
+[apps.api]
+path = "~/LeoMed-Code/app-leomed/leomed-api"
+port = 3000
+type = "rails"
+start_cmd = ["bundle", "exec", "rails", "s", "-p", "3000"]
+
+[apps.webapp]
+path = "~/LeoMed-Code/app-leomed/leomed-webapp"
+port = 4200
+type = "angular"
+start_cmd = ["npm", "start"]
