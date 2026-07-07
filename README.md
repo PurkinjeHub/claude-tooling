@@ -67,7 +67,7 @@ uv sync
 claude mcp add leomed -s user -- uv --directory [chemin]/claude-tooling/mcp/leomed-mcp run server.py
 ```
 
-⚠️ **Si `leomed-wsl` existe déjà** (ancien enregistrement, avant ce repo) : `claude mcp remove leomed-wsl` d'abord — voir `mcp/leomed-mcp/README.md` pour le détail complet, y compris la config personnelle (`~/.leomed-mcp/config.toml`) qui n'est pas affectée par ce changement.
+⚠️ **Si `leomed-wsl` existe déjà** (ancien enregistrement, avant ce repo) : `claude mcp remove leomed-wsl` d'abord — voir [mcp/leomed-mcp/README.md](mcp/leomed-mcp/README.md) pour le détail complet, y compris la config personnelle (`~/.leomed-mcp/config.toml`) qui n'est pas affectée par ce changement.
 
 ### 5. Synchronisation automatique (optionnel mais recommandé)
 
@@ -120,15 +120,15 @@ git submodule add [url-du-skill-externe] skills/external-skills/nom-du-skill
 ```
 Permet `git submodule update --remote`, mais ajoute de la complexité — à réserver aux cas où le suivi actif vaut le coût.
 
-**Ne jamais éditer un skill externe en place** — voir `skills/external-skills/README.md`.
+**Ne jamais éditer un skill externe en place** — voir [skills/external-skills/README.md](skills/external-skills/README.md).
 
 ## Ajouter une commande (`commands/`)
 
-Voir `commands/README.md`, section « Ajouter une commande ».
+Voir [commands/README.md](commands/README.md), section « Ajouter une commande ».
 
 ## Ajouter un serveur MCP (`mcp/`)
 
-Voir `mcp/README.md` — sous-dossier avec code propre si c'est un vrai petit projet, simple `.mcp.json` avec `${VAR}` pour les secrets si c'est juste une définition de serveur distant.
+Voir [mcp/README.md](mcp/README.md) — sous-dossier avec code propre si c'est un vrai petit projet, simple `.mcp.json` avec `${VAR}` pour les secrets si c'est juste une définition de serveur distant.
 
 ## Dépannage
 
