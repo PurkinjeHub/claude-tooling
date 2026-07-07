@@ -30,6 +30,8 @@ Chaque skill et chaque serveur MCP garde son propre `README.md` (et `CHANGELOG.m
 
 > **Windows :** lance les commandes de ce README depuis **Git Bash**, pas PowerShell/cmd.exe. Les scripts (`.sh`) sont écrits en bash ; depuis PowerShell, Windows essaie de les « ouvrir » via l'association de fichier au lieu de les exécuter (dialogue « Choisir une application »).
 
+> **WSL :** Windows et WSL ont chacun leur propre `~/.claude` — ce ne sont pas les mêmes skills/commandes actifs ni le même hook de synchronisation, même si tu accèdes au même repo cloné (ex. via `/mnt/c/...`). Si tu utilises Claude Code à la fois depuis un terminal Windows (Git Bash/PowerShell) et depuis un terminal WSL, refais les étapes 2 à 6 séparément dans chaque environnement.
+
 ### 1. Cloner le repo
 
 ```bash
@@ -137,3 +139,4 @@ Voir [mcp/README.md](mcp/README.md) — sous-dossier avec code propre si c'est u
 - **Le hook `daily-sync.sh` ne semble rien faire** — vérifie `~/.claude/.last-skills-sync`, il contient la date de la dernière synchronisation. Supprime-le pour forcer une resync au prochain démarrage, ou lance `./scripts/update-skills.sh` directement.
 - **`git pull` échoue avec un message de divergence** — `--ff-only` a volontairement refusé de créer un merge commit automatique. Résoudre à la main (`git log`, `git status`) plutôt que de forcer.
 - **Un serveur MCP ne se connecte pas après un changement de chemin** — vérifier `claude mcp get [nom]` pour voir le chemin actuellement enregistré ; un `claude mcp remove` + `claude mcp add` est parfois plus fiable qu'une édition manuelle de `~/.claude.json`.
+- **Un skill/commande/hook actif sous Windows n'apparaît pas dans WSL (ou l'inverse)** — comportement attendu, pas un bug : Windows et WSL ont chacun leur propre `~/.claude`, donc leur propre activation. Voir la note WSL dans [Installation](#installation-une-fois-par-poste) ci-dessus.
