@@ -8,10 +8,10 @@ Ce serveur vivait avant dans `~/mcp-servers/leomed`, enregistré sous le nom `le
 
 ```bash
 claude mcp remove leomed-wsl
-claude mcp add leomed -s user -- uv --directory ~/dev/claude-tooling/mcp/leomed-mcp run server.py
+claude mcp add leomed -s user -- uv --directory [chemin]/claude-tooling/mcp/leomed-mcp run server.py
 ```
 
-(Ajuste `~/dev/claude-tooling` si tu as cloné le repo ailleurs.) Ta config personnelle (`~/.leomed-mcp/config.toml`) n'est pas affectée — elle reste où elle est, indépendamment de l'emplacement de `server.py`.
+(Remplace `[chemin]` par le dossier où tu as cloné le repo.) Ta config personnelle (`~/.leomed-mcp/config.toml`) n'est pas affectée — elle reste où elle est, indépendamment de l'emplacement de `server.py`.
 
 ## Outils exposés
 
@@ -28,14 +28,14 @@ Où `name` ∈ `{"hub", "api", "webapp"}`.
 
 ## Installation (dans WSL)
 
-Ce dossier fait partie du repo `claude-tooling` — voir le `README.md` à la racine du repo pour le cloner. Une fois cloné (ex. dans `~/dev/claude-tooling`) :
+Ce dossier fait partie du repo `claude-tooling` — voir le `README.md` à la racine du repo pour le cloner. Une fois cloné (ex. dans `[chemin]/claude-tooling`) :
 
 ```bash
 # 1. Installer uv si pas déjà fait
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # 2. Installer les dépendances
-cd ~/dev/claude-tooling/mcp/leomed-mcp
+cd [chemin]/claude-tooling/mcp/leomed-mcp
 uv sync
 
 # 3. Vérifier que lsof est dispo
@@ -66,7 +66,7 @@ Si tu préfères garder ta config ailleurs (ex. dans un dotfiles repo), pointe
 Avant de brancher Claude, valide que le serveur fonctionne :
 
 ```bash
-cd ~/dev/claude-tooling/mcp/leomed-mcp
+cd [chemin]/claude-tooling/mcp/leomed-mcp
 npx @modelcontextprotocol/inspector uv run server.py
 ```
 
@@ -86,7 +86,7 @@ npx @modelcontextprotocol/inspector uv run server.py
         "--",
         "/home/[ton-user-linux]/.local/bin/uv",
         "--directory",
-        "/home/[ton-user-linux]/dev/claude-tooling/mcp/leomed-mcp",
+        "/home/[ton-user-linux]/[chemin]/claude-tooling/mcp/leomed-mcp",
         "run",
         "server.py"
       ]
@@ -101,13 +101,13 @@ Remplace `Ubuntu` par le nom exact de ta distro WSL (`wsl -l` pour le voir) et
 ## Brancher Claude Code (dans VS Code, lancé en WSL)
 
 ```bash
-claude mcp add leomed -- uv --directory ~/dev/claude-tooling/mcp/leomed-mcp run server.py
+claude mcp add leomed -- uv --directory [chemin]/claude-tooling/mcp/leomed-mcp run server.py
 ```
 
 ## Brancher Claude Code (depuis Windows, WSL en sous-processus)
 
 ```bash
-claude mcp add leomed -s user -- wsl.exe -- /home/[ton-user-linux]/.local/bin/uv --directory /home/[ton-user-linux]/dev/claude-tooling/mcp/leomed-mcp run server.py
+claude mcp add leomed -s user -- wsl.exe -- /home/[ton-user-linux]/.local/bin/uv --directory /home/[ton-user-linux]/[chemin]/claude-tooling/mcp/leomed-mcp run server.py
 ```
 
 Puis dans Claude Code :

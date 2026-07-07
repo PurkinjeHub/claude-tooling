@@ -11,9 +11,8 @@ allowed-tools: Bash(bash *), Bash(git *), Read
 
 ## Étapes
 
-1. **Localiser le repo claude-tooling.** Il n'est pas au même endroit sur chaque poste. Dans l'ordre :
+1. **Localiser le repo claude-tooling.** Il n'est pas au même endroit sur chaque poste (le README ne suggère aucun chemin par défaut). Dans l'ordre :
    - Lire `~/.claude/settings.json` et chercher le hook `SessionStart` qui pointe vers `.../scripts/daily-sync.sh` — le repo est le dossier deux niveaux au-dessus de ce fichier.
-   - Sinon, essayer `~/dev/claude-tooling` (emplacement suggéré par le README).
    - Sinon, demander à l'utilisateur où il a cloné le repo.
 
 2. **Lancer le script** :
