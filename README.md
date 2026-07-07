@@ -27,6 +27,8 @@ Chaque skill et chaque serveur MCP garde son propre `README.md` (et `CHANGELOG.m
 
 ## Installation (une fois, par poste)
 
+> **Windows :** lance les commandes de ce README depuis **Git Bash**, pas PowerShell/cmd.exe. Les scripts (`.sh`) sont écrits en bash ; depuis PowerShell, Windows essaie de les « ouvrir » via l'association de fichier au lieu de les exécuter (dialogue « Choisir une application »).
+
 ### 1. Cloner le repo
 
 ```bash
