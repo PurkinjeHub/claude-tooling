@@ -4,6 +4,12 @@ Ce fichier suit les changements **structurels** du repo (ajout/retrait de skills
 
 ## [Non publié]
 
+## 2026-07-07 — Activation par copies gérées (fin des symlinks)
+
+- `scripts/setup-symlinks.sh` remplacé par `scripts/activate.sh` : l'activation copie maintenant les skills/commandes dans `~/.claude/` au lieu de créer des liens symboliques. Motif : sur Windows, les vrais symlinks exigent le Mode développeur, et Git Bash retombe silencieusement sur une copie quand il ne peut pas les créer — résultat, des copies figées qui dérivaient du repo sans avertissement (constaté sur poste : skill et commandes actifs datant d'avant la migration, sans le frontmatter `disable-model-invocation`). Même interface (`--list`, `skill <nom>`, `command <nom>`, `command --all`), plus un mode `--refresh` qui re-copie tout ce qui est actif.
+- `scripts/daily-sync.sh` appelle `activate.sh --refresh` après son pull quotidien : c'est maintenant lui qui propage les mises à jour du repo vers `~/.claude/`. Un élément désactivé (`rm`) n'est jamais réactivé par le refresh.
+- README : note « lancer depuis Git Bash » pour Windows (PowerShell ouvre les `.sh` via l'association de fichier au lieu de les exécuter), alias `update-skills` enrichi du `--refresh`, avertissement de ne jamais éditer dans `~/.claude/` directement.
+
 ## 2026-07-06 (2) — Renommage et élargissement : skills-claude → claude-tooling
 
 - Renommage du repo `skills-claude` → `claude-tooling` : il couvre maintenant plus que des skills.

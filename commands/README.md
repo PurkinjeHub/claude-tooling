@@ -46,7 +46,7 @@ Les 4 commandes du cycle ticket → PR attendent un `.claude/pr-config.json` à 
 2. Ajouter une ligne au tableau catalogue ci-dessus (« Fait partie de » = `—` si elle est indépendante).
 3. Si elle rejoint ou crée une séquence, documenter cette séquence dans sa propre sous-section, comme « Cycle ticket → PR » ci-dessus.
 4. Logger l'ajout dans `../CHANGELOG.md` (racine du repo).
-5. L'activer sur ton poste : `../scripts/setup-symlinks.sh command nom-commande` (voir le README racine, étape d'installation).
+5. L'activer sur ton poste : `../scripts/activate.sh command nom-commande` (voir le README racine, étape d'installation).
 
 **Quand passer d'un fichier à un sous-dossier :** si une commande a besoin de fichiers de support (gabarit, script séparé), ou si plusieurs commandes non reliées au cycle ticket → PR commencent à former leur propre groupe cohérent — pas avant.
 

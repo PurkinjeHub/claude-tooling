@@ -14,7 +14,7 @@ claude-tooling/
 ├── mcp/                     ← Serveurs MCP globaux (disponibles peu importe le projet ouvert)
 │   └── leomed-mcp/          ← Pilote les 3 apps LeoMed en local (hub, api, webapp)
 ├── scripts/
-│   ├── setup-symlinks.sh    ← Active un skill localement (lien symbolique)
+│   ├── activate.sh          ← Active un skill ou une commande localement (copie gérée)
 │   └── daily-sync.sh        ← Utilisé par le hook de synchronisation automatique
 └── CHANGELOG.md             ← Changements structurels du repo
 ```
@@ -41,17 +41,19 @@ Peut être cloné ailleurs si tu préfères — les scripts se repèrent par rap
 
 ```bash
 cd ~/dev/claude-tooling
-./scripts/setup-symlinks.sh --list                # voir ce qui est disponible / actif
-./scripts/setup-symlinks.sh skill agile-testing    # activer ce skill
+./scripts/activate.sh --list                # voir ce qui est disponible / actif
+./scripts/activate.sh skill agile-testing    # activer ce skill
 ```
 
-Chacun choisit ses skills actifs. Pour désactiver un skill plus tard : `rm ~/.claude/skills/agile-testing` (le repo n'est pas affecté).
+Chacun choisit ses skills actifs. Activer = copier dans `~/.claude/skills/` ; le hook de synchronisation (étape 5) rafraîchit automatiquement les copies actives, donc un `git pull` finit toujours par se propager. **Ne jamais éditer un skill directement dans `~/.claude/`** — les modifications y seraient écrasées au prochain rafraîchissement ; éditer dans le repo.
+
+Pour désactiver un skill plus tard : `rm -rf ~/.claude/skills/agile-testing` (le repo n'est pas affecté, et la synchronisation ne réactive jamais un élément désactivé).
 
 ### 3. Activer les commandes voulues
 
 ```bash
-./scripts/setup-symlinks.sh command pr-new         # activer une commande précise
-./scripts/setup-symlinks.sh command --all          # ou toutes les activer d'un coup
+./scripts/activate.sh command pr-new         # activer une commande précise
+./scripts/activate.sh command --all          # ou toutes les activer d'un coup
 ```
 
 Les 4 commandes du cycle ticket → PR (`start-ticket`, `pr-new`, `pr-upd`, `pr-complete`) n'ont d'effet que sur demande explicite (`disable-model-invocation: true`), donc les activer toutes ne présente pas le même risque qu'activer tous les skills sans discernement — `command --all` est un bon défaut pour celles-là.
@@ -80,7 +82,7 @@ Ajouter dans `~/.claude/settings.json` :
 }
 ```
 
-Ajuste le chemin si tu as cloné ailleurs. Ce hook vérifie une fois par session s'il a déjà synchronisé aujourd'hui ; si non, il fait un `git pull` silencieux et affiche un message seulement s'il y avait du nouveau. Il ne bloque jamais une session, même si le pull échoue.
+Ajuste le chemin si tu as cloné ailleurs. Ce hook vérifie une fois par session s'il a déjà synchronisé aujourd'hui ; si non, il fait un `git pull` silencieux, **re-copie les skills et commandes actifs** dans `~/.claude/` (c'est ce qui propage les mises à jour du repo sur ton poste), et affiche un message seulement s'il y avait du nouveau. Il ne bloque jamais une session, même si le pull échoue.
 
 ### 6. Alias manuel (pour forcer une resync à tout moment)
 
@@ -88,7 +90,7 @@ Ajouter dans `.bashrc` / `.zshrc` :
 
 ```bash
 update-skills() {
-  cd ~/dev/claude-tooling && git pull --ff-only
+  cd ~/dev/claude-tooling && git pull --ff-only && ./scripts/activate.sh --refresh
 }
 ```
 
@@ -126,7 +128,8 @@ Voir `mcp/README.md` — sous-dossier avec code propre si c'est un vrai petit pr
 
 ## Dépannage
 
-- **Un skill ne se déclenche plus après un `git pull`** — nouvelle session requise ; Claude Code charge les skills au démarrage, pas en cours de session.
+- **Un `git pull` ne semble pas pris en compte** — les skills/commandes actifs sont des copies dans `~/.claude/`, rafraîchies par le hook quotidien ou `update-skills`. Après un pull manuel sans l'alias, lancer `./scripts/activate.sh --refresh`. Et dans tous les cas : nouvelle session requise, Claude Code charge les skills au démarrage, pas en cours de session.
+- **Une modification faite dans `~/.claude/skills/` a disparu** — comportement attendu : les copies actives sont écrasées à chaque rafraîchissement. Toujours éditer dans le repo (`~/dev/claude-tooling`), jamais dans `~/.claude/`.
 - **Le hook `daily-sync.sh` ne semble rien faire** — vérifie `~/.claude/.last-skills-sync`, il contient la date de la dernière synchronisation. Supprime-le pour forcer une resync au prochain démarrage, ou lance `update-skills` directement.
 - **`git pull` échoue avec un message de divergence** — `--ff-only` a volontairement refusé de créer un merge commit automatique. Résoudre à la main (`git log`, `git status`) plutôt que de forcer.
 - **Un serveur MCP ne se connecte pas après un changement de chemin** — vérifier `claude mcp get [nom]` pour voir le chemin actuellement enregistré ; un `claude mcp remove` + `claude mcp add` est parfois plus fiable qu'une édition manuelle de `~/.claude.json`.
