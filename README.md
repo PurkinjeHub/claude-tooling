@@ -15,7 +15,8 @@ claude-tooling/
 │   └── leomed-mcp/          ← Pilote les 3 apps LeoMed en local (hub, api, webapp)
 ├── scripts/
 │   ├── activate.sh          ← Active un skill ou une commande localement (copie gérée)
-│   └── daily-sync.sh        ← Utilisé par le hook de synchronisation automatique
+│   ├── daily-sync.sh        ← Utilisé par le hook de synchronisation automatique
+│   └── update-skills.sh     ← Force une resync immédiate à la main (pull + refresh)
 └── CHANGELOG.md             ← Changements structurels du repo
 ```
 
@@ -84,15 +85,18 @@ Ajouter dans `~/.claude/settings.json` :
 
 Ajuste le chemin si tu as cloné ailleurs. Ce hook vérifie une fois par session s'il a déjà synchronisé aujourd'hui ; si non, il fait un `git pull` silencieux, **re-copie les skills et commandes actifs** dans `~/.claude/` (c'est ce qui propage les mises à jour du repo sur ton poste), et affiche un message seulement s'il y avait du nouveau. Il ne bloque jamais une session, même si le pull échoue.
 
-### 6. Alias manuel (pour forcer une resync à tout moment)
+### 6. Forcer une resync à tout moment (`update-skills.sh`)
 
-Ajouter dans `.bashrc` / `.zshrc` :
+Le hook de l'étape 5 est automatique mais limité : une fois par jour, en silence, et seulement au démarrage d'une session Claude Code. Pour forcer une mise à jour immédiate — par exemple après avoir pushé un changement dans ce repo, ou pour voir les erreurs en clair quand quelque chose ne se propage pas — lancer depuis Git Bash :
 
 ```bash
-update-skills() {
-  cd ~/dev/claude-tooling && git pull --ff-only && ./scripts/activate.sh --refresh
-}
+cd ~/dev/claude-tooling    # ou là où tu as cloné le repo
+./scripts/update-skills.sh
 ```
+
+Le script fait le `git pull` puis re-copie les skills/commandes actifs dans `~/.claude/`, en affichant ce qu'il fait et les erreurs éventuelles. Redémarre ensuite ta session Claude Code pour charger les changements.
+
+Si tu es déjà dans une session Claude Code, la commande `/update-skills` (à activer comme les autres, étape 3) fait la même chose sans quitter la session — mais les changements ne seront chargés qu'à la session suivante, Claude Code lit les skills/commandes au démarrage.
 
 ## Ajouter un skill qu'on développe (`skills/purk-skills/`)
 
@@ -128,8 +132,8 @@ Voir `mcp/README.md` — sous-dossier avec code propre si c'est un vrai petit pr
 
 ## Dépannage
 
-- **Un `git pull` ne semble pas pris en compte** — les skills/commandes actifs sont des copies dans `~/.claude/`, rafraîchies par le hook quotidien ou `update-skills`. Après un pull manuel sans l'alias, lancer `./scripts/activate.sh --refresh`. Et dans tous les cas : nouvelle session requise, Claude Code charge les skills au démarrage, pas en cours de session.
+- **Un `git pull` ne semble pas pris en compte** — les skills/commandes actifs sont des copies dans `~/.claude/`, rafraîchies par le hook quotidien ou `./scripts/update-skills.sh`. Après un pull manuel, lancer `./scripts/activate.sh --refresh` (ou simplement `update-skills.sh`, qui refait le pull sans coûter plus cher). Et dans tous les cas : nouvelle session requise, Claude Code charge les skills au démarrage, pas en cours de session.
 - **Une modification faite dans `~/.claude/skills/` a disparu** — comportement attendu : les copies actives sont écrasées à chaque rafraîchissement. Toujours éditer dans le repo (`~/dev/claude-tooling`), jamais dans `~/.claude/`.
-- **Le hook `daily-sync.sh` ne semble rien faire** — vérifie `~/.claude/.last-skills-sync`, il contient la date de la dernière synchronisation. Supprime-le pour forcer une resync au prochain démarrage, ou lance `update-skills` directement.
+- **Le hook `daily-sync.sh` ne semble rien faire** — vérifie `~/.claude/.last-skills-sync`, il contient la date de la dernière synchronisation. Supprime-le pour forcer une resync au prochain démarrage, ou lance `./scripts/update-skills.sh` directement.
 - **`git pull` échoue avec un message de divergence** — `--ff-only` a volontairement refusé de créer un merge commit automatique. Résoudre à la main (`git log`, `git status`) plutôt que de forcer.
 - **Un serveur MCP ne se connecte pas après un changement de chemin** — vérifier `claude mcp get [nom]` pour voir le chemin actuellement enregistré ; un `claude mcp remove` + `claude mcp add` est parfois plus fiable qu'une édition manuelle de `~/.claude.json`.

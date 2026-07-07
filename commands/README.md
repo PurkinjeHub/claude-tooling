@@ -27,6 +27,7 @@ Chaque commande vérifie ses propres préconditions (branche parente encore sur 
 | `/pr-new` | Crée et envoie un PR en révision | Push, crée un PR, modifie le statut Linear | Cycle ticket → PR |
 | `/pr-upd` | Met à jour un PR existant | Push, modifie la description du PR | Cycle ticket → PR |
 | `/pr-complete` | Finalise un PR approuvé | Squash merge, supprime des branches, modifie le statut Linear | Cycle ticket → PR |
+| `/update-skills` | Force une resync du repo claude-tooling (pull + refresh) | Pull du repo, écrase les copies actives dans `~/.claude/` | — |
 
 ## Dépendance commune
 

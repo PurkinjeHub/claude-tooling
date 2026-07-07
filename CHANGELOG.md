@@ -4,6 +4,9 @@ Ce fichier suit les changements **structurels** du repo (ajout/retrait de skills
 
 ## [Non publié]
 
+- Ajout de `scripts/update-skills.sh` : resync manuelle immédiate (pull + refresh), remplace l'alias shell `update-skills` que le README demandait d'ajouter dans `.bashrc`/`.zshrc` — trop de friction pour qui ne connaît pas la config de son shell, alors qu'un script dans le repo se lance directement depuis Git Bash. README (étape 6, Dépannage) et commentaire de `daily-sync.sh` mis à jour en conséquence.
+- Ajout de la commande `/update-skills` : équivalent en session du script ci-dessus, pour resynchroniser sans quitter Claude Code. Retrouve le repo via le hook `SessionStart` de `~/.claude/settings.json`. Les changements synchronisés ne sont chargés qu'à la session suivante (limite documentée dans la commande et le README).
+
 ## 2026-07-07 — Activation par copies gérées (fin des symlinks)
 
 - `scripts/setup-symlinks.sh` remplacé par `scripts/activate.sh` : l'activation copie maintenant les skills/commandes dans `~/.claude/` au lieu de créer des liens symboliques. Motif : sur Windows, les vrais symlinks exigent le Mode développeur, et Git Bash retombe silencieusement sur une copie quand il ne peut pas les créer — résultat, des copies figées qui dérivaient du repo sans avertissement (constaté sur poste : skill et commandes actifs datant d'avant la migration, sans le frontmatter `disable-model-invocation`). Même interface (`--list`, `skill <nom>`, `command <nom>`, `command --all`), plus un mode `--refresh` qui re-copie tout ce qui est actif.

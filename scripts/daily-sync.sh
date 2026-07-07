@@ -7,7 +7,7 @@
 #
 # Ce script ne bloque jamais une session : il se termine toujours avec exit 0, même
 # si le pull échoue (pas de réseau, conflit, etc.). En cas de doute, lancer
-# `update-skills` à la main (voir README) pour voir l'erreur réelle.
+# `scripts/update-skills.sh` à la main (voir README) pour voir l'erreur réelle.
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MARKER="$HOME/.claude/.last-skills-sync"
