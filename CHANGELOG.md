@@ -4,6 +4,7 @@ Ce fichier suit les changements **structurels** du repo (ajout/retrait de skills
 
 ## [Non publié]
 
+- Ajout de `skills/purk-skills/workflow-dev-pur/` : conventions de développement PurkinjeHub (tickets Linear `LOG-`, cycle ticket → PR via les 4 slash commands, format de PR, statuts Linear). Documente le comportement attendu de ces commandes ; leur implémentation reste dans `commands/`. `commands/README.md` mis à jour en parallèle (section « Setup requis par repo » : `.claude/pr-config.json` et permissions à ajouter dans chaque repo cible).
 - Ajout de `scripts/update-skills.sh` : resync manuelle immédiate (pull + refresh), remplace l'alias shell `update-skills` que le README demandait d'ajouter dans `.bashrc`/`.zshrc` — trop de friction pour qui ne connaît pas la config de son shell, alors qu'un script dans le repo se lance directement depuis Git Bash. README (étape 6, Dépannage) et commentaire de `daily-sync.sh` mis à jour en conséquence.
 - Ajout de la commande `/update-skills` : équivalent en session du script ci-dessus, pour resynchroniser sans quitter Claude Code. Retrouve le repo via le hook `SessionStart` de `~/.claude/settings.json`. Les changements synchronisés ne sont chargés qu'à la session suivante (limite documentée dans la commande et le README).
 

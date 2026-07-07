@@ -29,9 +29,65 @@ Chaque commande vérifie ses propres préconditions (branche parente encore sur 
 | `/pr-complete` | Finalise un PR approuvé | Squash merge, supprime des branches, modifie le statut Linear | Cycle ticket → PR |
 | `/update-skills` | Force une resync du repo claude-tooling (pull + refresh) | Pull du repo, écrase les copies actives dans `~/.claude/` | — |
 
-## Dépendance commune
+## Setup requis par repo
 
-Les 4 commandes du cycle ticket → PR attendent un `.claude/pr-config.json` à la racine du repo où elles s'exécutent (reviewers par défaut). Ce fichier vit dans chaque repo de projet (LeoMed ou futur), pas ici — ces commandes sont génériques, pas propres à LeoMed.
+Les 4 commandes du cycle ticket → PR sont génériques (pas propres à un repo précis), mais chaque repo cible où elles s'exécutent doit fournir localement deux choses : un fichier de config pour les reviewers, et des permissions pour éviter les confirmations répétées sur `git`/`gh`/Linear.
+
+### 1. `.claude/pr-config.json`
+
+À créer à la racine du repo cible (pas ici, dans `claude-tooling`). Gabarit complet :
+
+```json
+{
+  "reviewers": ["github-username-1", "github-username-2"],
+  "base_branch": "main",
+  "assignee": "@me",
+  "confirm_before_push": true
+}
+```
+
+Seul `reviewers` est **actif** — `/pr-new` le lit pour préremplir les reviewers du PR. `base_branch`, `assignee` et `confirm_before_push` sont **ignorés** : les valeurs correspondantes (`main`, `@me`, confirmation systématique) sont hardcodées dans les commandes. Les inclure dans le fichier ne change rien tant que les commandes ne sont pas modifiées pour les lire — voir la section « Configuration par repo » de `SKILL.md` du skill `workflow-dev-pur`.
+
+Si tu n'as pas besoin de documenter les champs ignorés, le format minimal suffit :
+
+```json
+{ "reviewers": ["github-username-1", "github-username-2"] }
+```
+
+### 2. Permissions dans `.claude/settings.json`
+
+À ajouter (fusionner, pas remplacer) dans `.claude/settings.json` du repo cible, pour que Claude Code n'interrompe pas le flux avec une confirmation à chaque appel `git`, `gh` ou Linear :
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(gh *)",
+      "PowerShell(git *)",
+      "PowerShell(gh *)",
+      "mcp__claude_ai_Linear__get_issue",
+      "mcp__claude_ai_Linear__get_issue_status",
+      "mcp__claude_ai_Linear__list_issue_statuses",
+      "mcp__claude_ai_Linear__list_issues",
+      "mcp__claude_ai_Linear__list_projects",
+      "mcp__claude_ai_Linear__list_teams",
+      "mcp__claude_ai_Linear__list_users",
+      "mcp__claude_ai_Linear__list_comments",
+      "mcp__claude_ai_Linear__get_project",
+      "mcp__claude_ai_Linear__get_team",
+      "mcp__claude_ai_Linear__get_user",
+      "mcp__claude_ai_Linear__save_issue"
+    ]
+  }
+}
+```
+
+Seuls `get_issue` et `save_issue` sont appelés explicitement dans le texte des 4 commandes ; le reste de la liste Linear couvre les résolutions de noms/statuts/personnes que le modèle peut faire en cours de route sans que ce soit écrit littéralement dans une commande.
+
+### Pourquoi ce fichier n'est jamais activé comme commande
+
+`scripts/activate.sh` exclut explicitement `README.md` de `commands/` — dans `list_all`, `activate_all_commands` et `refresh_active`, chacun a un `[ "$name" = "README" ] && continue` (ou équivalent). Ce fichier ne sera donc jamais copié dans `~/.claude/commands/` ni proposé comme fausse commande `/README`.
 
 ## Ajouter une commande
 
@@ -53,4 +109,4 @@ Les 4 commandes du cycle ticket → PR attendent un `.claude/pr-config.json` à 
 
 ## Note sur `allowed-tools`
 
-Les 4 commandes existantes restreignent `Bash(git *)` et `Bash(gh *)`. Elles utilisent aussi des outils MCP Linear (`mcp__..._Linear__get_issue`, `save_issue`) qui ne sont pas explicitement listés dans `allowed-tools` — à vérifier contre la doc Claude Code au moment d'écrire de nouvelles commandes si tu veux les restreindre aussi précisément.
+Les 4 commandes existantes restreignent leur propre frontmatter à `Bash(git *)` et `Bash(gh *)`. Les outils MCP Linear qu'elles appellent (`get_issue`, `save_issue`) n'y sont pas listés — c'est le `permissions.allow` du `.claude/settings.json` **du repo cible** (section « Setup requis par repo » ci-dessus) qui les autorise réellement. À vérifier contre la doc Claude Code au moment d'écrire de nouvelles commandes si tu veux restreindre leur `allowed-tools` aussi précisément.
