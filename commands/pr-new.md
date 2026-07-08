@@ -78,9 +78,9 @@ allowed-tools: Bash(git *), Bash(gh *), Read(.claude/pr-config.json)
 
 10. Afficher l'URL du PR créé.
 
-11. Passer le billet Linear en **In code Review** :
+11. Passer le billet Linear en **In Code Review** :
     ```
-    mcp__claude_ai_Linear__save_issue(id: "[id]", state: "In code Review")
+    mcp__claude_ai_Linear__save_issue(id: "[id]", state: "In Code Review")
     ```
 
 ---

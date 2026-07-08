@@ -14,7 +14,7 @@ Ticket Linear (LOG-XXXX)
    Développement local, stage et commit fait par le développeur
         │
         ▼
-   /pr-new         ──►  PR ouverte [LOG-XXXX] <summary>, billet → In code Review
+   /pr-new         ──►  PR ouverte [LOG-XXXX] <summary>, billet → In Code Review
         │
         ▼
    Itération (révision par un pair, ajustements par le développeur)
@@ -52,7 +52,10 @@ Phase manuelle, sans slash command dédiée. Le développeur travaille avec Clau
 
 **Conventions de commit** :
 
-- Messages clairs et concis, en français.
+- Messages en anglais, au format conventionnel : préfixe `feat:`, `fix:`, `test:`, `docs:` ou `refactor:` suivi d'une description claire et de la référence du ticket (ex. `feat: add transmission polling (LOG-1234)`).
+- Commit distinct pour les tests unitaires, séparé du commit de code de l'issue.
+- Si le changement a un impact API ou sur les statuts : mettre à jour la documentation dans un commit de la même branche.
+- Déplacements et renommages de fichiers avec `git mv` — jamais copier/supprimer — pour préserver l'historique (`git log --follow`).
 - Pas de réécriture forcée de l'historique pendant le développement actif.
 - Les messages de commit restent intacts dans l'historique. Le polish des descriptions destinées à la PR a lieu plus tard, dans `/pr-new`, qui reformule les commits en bullets clairs pour le corps de la PR sans toucher aux messages d'origine.
 
@@ -69,12 +72,13 @@ Phase manuelle, sans slash command dédiée. Le développeur travaille avec Clau
 - Construit un aperçu (titre `[<id>] <titre>`, branche, assignee, reviewers, description) et **demande confirmation** avant de procéder.
 - Une fois confirmé : pousse la branche (`git push -u origin HEAD`) et crée la PR via `gh pr create` avec `--title`, `--body`, `--assignee @me`, `--reviewer <liste>`, `--base main`.
 - Affiche l'URL de la PR.
-- Passe le billet Linear à **In code Review**.
+- Passe le billet Linear à **In Code Review**.
 
 **Vigilance** :
 
 - Aucun magic keyword n'est inséré dans la description. Le lien Linear ↔ PR repose sur le nom de branche et le titre `[LOG-XXXX]`, et la transition de statut est faite explicitement par la commande via le MCP Linear.
 - Si `.claude/pr-config.json` est absent ou mal formé, le comportement actuel n'est pas spécifié ; à confirmer au moment de l'utiliser sur un repo qui n'a pas encore le fichier.
+- La checklist des critères d'acceptation du billet dans la description est une pratique recommandée, mais `/pr-new` ne l'ajoute pas automatiquement — l'ajouter manuellement après la création de la PR (interface GitHub ou `gh pr edit`).
 
 ## Phase 4 — Itération sur la PR : `/pr-upd`
 
@@ -95,7 +99,7 @@ Phase manuelle, sans slash command dédiée. Le développeur travaille avec Clau
 
 - La commande ne touche pas au titre de la PR ni à la liste des reviewers. Si le titre du billet a changé ou si les reviewers doivent être ajustés, c'est à faire manuellement (`gh pr edit --title`, interface GitHub, etc.).
 - Les ajouts manuels dans la description sont préservés : la commande ajoute en suffixe sans réécrire le bloc existant.
-- La commande ne touche pas non plus au statut Linear : le billet reste à **In code Review** pendant toutes les itérations.
+- La commande ne touche pas non plus au statut Linear : le billet reste à **In Code Review** pendant toutes les itérations.
 
 ## Phase 5 — Finalisation : `/pr-complete`
 
@@ -159,8 +163,8 @@ Les magic keywords Linear (`Fixes`, `Closes`, `Resolves`) ne sont **pas** utilis
 |----------------|--------------------|-------------------|
 | Avant le dev   | *Backlog* / *Todo* | manuel            |
 | Démarrage      | *In Progress*      | `/start-ticket`   |
-| PR ouverte     | *In code Review*   | `/pr-new`         |
-| Itérations PR  | *In code Review*   | (inchangé)        |
+| PR ouverte     | *In Code Review*   | `/pr-new`         |
+| Itérations PR  | *In Code Review*   | (inchangé)        |
 | PR mergée      | *In QA*            | `/pr-complete`    |
 | Plus tard      | *Done* (ou autre)  | hors flux dev     |
 

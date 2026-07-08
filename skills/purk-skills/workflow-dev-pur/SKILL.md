@@ -18,7 +18,7 @@ Tu assistes le développeur à PurkinjeHub. Ce skill encode ses conventions de d
 Quatre slash commands automatisent le flux de bout en bout. Chacune gère explicitement les transitions de statut Linear via le MCP Linear — il n'y a pas de magic keywords dans les PRs.
 
 - `/start-ticket <id>` — démarre le travail. Checkout `main`, pull, création de la branche `<user gitHub>/<id>`, lecture du billet via MCP Linear. Ticket Linear passe à **In Progress**.
-- `/pr-new` — ouvre la PR initiale. Merge `origin/main` dans la branche, reformule les commits en bullets clairs, lit `.claude/pr-config.json` pour les reviewers, demande confirmation, puis push + `gh pr create`. Ticket passe à **In code Review**.
+- `/pr-new` — ouvre la PR initiale. Merge `origin/main` dans la branche, reformule les commits en bullets clairs, lit `.claude/pr-config.json` pour les reviewers, demande confirmation, puis push + `gh pr create`. Ticket passe à **In Code Review**.
 - `/pr-upd` — ajoute les nouveaux commits (depuis `origin/<branche>`) à la description de la PR existante. **Ne touche pas** au titre, aux reviewers, ni au statut Linear. Les ajouts manuels dans la description sont préservés.
 - `/pr-complete` — squash merge, suppression de branche distante et locale, retour sur `main` et pull. Ticket passe à **In QA** (pas Done — la suite est faite par un autre acteur).
 
@@ -29,6 +29,7 @@ Quand le développeur invoque l'une de ces commandes ou discute de leur comporte
 - **Format de titre obligatoire** : `[<id>] <résumé>` avec l'ID Linear entre crochets droits, en majuscules (ex. `[LOG-1234] Refactor patient lookup`).
 - **Pas de magic keywords** (`Fixes`, `Closes`, `Resolves`) dans la description. Le lien Linear ↔ PR repose sur le nom de branche et le titre.
 - **Corps de la PR** : construit par `/pr-new` en reformulant chaque commit en bullet clair (une ligne par commit, langage non technique quand possible). Pas de `--fill-verbose`.
+- **Checklist des critères d'acceptation** : pratique recommandée — ajouter dans la description la checklist des critères d'acceptation du billet Linear. `/pr-new` ne le fait **pas** automatiquement ; c'est un ajout manuel du développeur après la création de la PR.
 - **Base** : toujours `main` (hardcodé dans les commandes).
 - **Assignee** : toujours `@me` (hardcodé).
 - **Merge** : toujours un squash via `gh pr merge --squash --delete-branch`. Non configurable par repo actuellement.
@@ -51,8 +52,8 @@ Si `.claude/pr-config.json` est absent ou mal formé, signale-le explicitement p
 |----------------|-----------------|------------------|
 | Avant le dev   | Backlog / Todo  | manuel           |
 | Démarrage      | In Progress     | `/start-ticket`  |
-| PR ouverte     | In code Review  | `/pr-new`        |
-| Itérations PR  | In code Review  | (inchangé)       |
+| PR ouverte     | In Code Review  | `/pr-new`        |
+| Itérations PR  | In Code Review  | (inchangé)       |
 | PR mergée      | In QA           | `/pr-complete`   |
 | Plus tard      | Done / autre    | hors flux dev    |
 
@@ -60,9 +61,15 @@ Important : `/pr-complete` **ne ferme pas** le ticket. Il passe à *In QA* pour 
 
 ## Conventions de commit
 
-- Messages clairs et concis, en français.
+- Messages en **anglais**, au format conventionnel : préfixe `feat:`, `fix:`, `test:`, `docs:` ou `refactor:` suivi d'une description claire et de la référence du ticket (ex. `feat: add transmission polling (LOG-1234)`).
+- **Commit distinct pour les tests unitaires**, séparé du commit de code de l'issue.
+- Si le changement a un impact API ou sur les statuts : mettre à jour la documentation dans un commit de la même branche.
 - Les messages de commit d'origine **ne sont jamais réécrits**. Le polish a lieu uniquement dans la reformulation pour le corps de la PR (`/pr-new`).
 - Pas de réécriture forcée de l'historique (rebase interactif, amend sur des commits poussés, etc.) sans confirmation explicite.
+
+## Conventions Git
+
+- **Déplacement ou renommage de fichiers : toujours `git mv`**, jamais copier/supprimer. Cela préserve l'historique (`git log --follow`) même après un déplacement.
 
 ## Communication
 

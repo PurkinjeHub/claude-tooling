@@ -13,7 +13,7 @@ Rangées à plat ici, sans sous-dossier — voir « Ajouter une commande » plus
 ```
 
 - **`/start-ticket`** crée la branche, passe le billet Linear en *In Progress*, garde le titre en mémoire pour `/pr-new`.
-- **`/pr-new`** ouvre le PR, passe le billet en *In code Review*.
+- **`/pr-new`** ouvre le PR, passe le billet en *In Code Review*.
 - **`/pr-upd`** ajoute les nouveaux commits à un PR déjà ouvert — répétable autant de fois que nécessaire pendant la révision.
 - **`/pr-complete`** merge (squash), nettoie les branches, passe le billet en *In QA*.
 
