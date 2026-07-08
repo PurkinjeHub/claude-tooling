@@ -7,9 +7,10 @@ Dépôt partagé de tout ce que l'équipe utilise avec Claude Code : skills, com
 ```
 claude-tooling/
 ├── skills/
-│   ├── purk-skills/        ← Skills qu'on développe et maintient nous-mêmes
-│   │   └── agile-testing/  ← Méthodologie de test agile + spécificités par projet
-│   └── external-skills/    ← Skills provenant d'ailleurs (marketplace, autres équipes...)
+│   ├── purk-skills/           ← Skills qu'on développe et maintient nous-mêmes
+│   │   ├── agile-testing/     ← Méthodologie de test agile + spécificités par projet
+│   │   └── workflow-dev-pur/  ← Conventions de dev PurkinjeHub, cycle ticket LOG- → PR
+│   └── external-skills/       ← Skills provenant d'ailleurs (marketplace, autres équipes...)
 ├── commands/                ← Commandes /nom-commande à effets de bord (Git, GitHub, Linear)
 ├── mcp/                     ← Serveurs MCP globaux (disponibles peu importe le projet ouvert)
 │   └── leomed-mcp/          ← Pilote les 3 apps LeoMed en local (hub, api, webapp)
