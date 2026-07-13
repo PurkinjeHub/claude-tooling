@@ -120,6 +120,24 @@ Pour chaque critère d'acceptation du ticket, classer selon les grilles généra
 **Tests exploratoires multi-navigateur (Q3) :**
 Quand un test manuel exploratoire touche l'interface web, noter explicitement dans l'analyse qu'il devrait être exécuté sur **Chrome, Edge et Firefox**. Les différences de rendu et de comportement entre navigateurs sont une source de défauts non-reproductibles en automatisation.
 
+### Q4 pour LeoMed (sécurité et performance)
+
+Le root du skill (`../../references/quadrants.md`) laisse Q4 hors scope généralisé, avec une note d'évolution explicite (« éventuellement Q3/Q4 générisés si la pratique l'exige »). Pour LeoMed spécifiquement, l'expérience d'une analyse réelle (LOG-124, portail patient — application manipulant des données de santé) justifie une politique Q4 propre au projet, sans attendre une généralisation à la racine :
+
+- **Sécurité — ne jamais différer, même en V1 ou en pilote.** LeoMed est une application médicale ; l'isolement des données patient et les protections de base (brute-force sur les facteurs d'authentification à espace de recherche restreint comme un code OTP, injection/XSS sur les champs de saisie libre, CSRF sur les actions sensibles) doivent être couverts dès la première version d'une feature, pas reportés à une itération de durcissement ultérieure.
+- **Performance/charge — peut être différée, mais pas ignorée.** Un vrai test de charge (simulation d'utilisateurs concurrents) n'a de sens qu'une fois qu'on dispose de données réelles de trafic — inutile de l'anticiper sur une feature en phase pilote. Par contre, des **mesures de référence à usage unique** (temps de chargement observé avec un volume de données réaliste, sans seuil strict imposé) restent peu coûteuses à capturer dès l'analyse initiale, pour détecter une dégradation future.
+- **Propriété (RACI) pour LeoMed** : sécurité Small/Medium (règles de validation, rate-limiting, policies d'autorisation) → développeur, comme le reste de Q1 ; sécurité E2E/exploratoire et mesures de performance de référence → analyste QA, en Q3/Q4 manuel. Pas de generalisation à la ligne Q4 du RACI racine (`../../references/roles-responsabilites.md`) — ceci est un ajustement explicite propre à LeoMed, documenté ici conformément à la règle « Ajuster pour un projet » de ce même fichier.
+
+### Bilinguisme FR/EN
+
+LeoMed est un produit bilingue (français et anglais) — à ne pas confondre avec la règle ci-dessus sur la langue du **code des tests** (toujours en français, voir plus haut). Le bilinguisme concerne l'interface elle-même et doit apparaître comme sa propre catégorie de critères d'acceptation, pas seulement comme un aspect secondaire d'un autre test :
+
+- Vérifier que chaque libellé, bouton, message d'état, en-tête et élément de menu visible existe et s'affiche correctement dans **les deux langues** — pas seulement que le changement de langue met à jour l'interface (ça, c'est un seul critère parmi d'autres).
+- Vérifier la complétude des clés de traduction (chaque clé FR a un équivalent EN et vice versa) : un test Small rapide et exhaustif, à faire avant tout balayage écran par écran.
+- Le contenu des courriels transactionnels (notifications, invitations, réinitialisation de mot de passe) doit suivre la langue préférée du destinataire, pas une langue fixe.
+- Prévoir une revue manuelle de non-troncature : le texte anglais est fréquemment plus long que son équivalent français (et parfois l'inverse) — un test de présence de texte ne détecte pas un débordement visuel, seul un jugement humain le peut.
+- Sur une analyse réelle (LOG-124), ce point n'était mentionné nulle part dans la documentation produit et a généré 14 scénarios distincts une fois soulevé explicitement — à intégrer systématiquement dans le tableau d'analyse dès qu'une feature touche l'interface, pas seulement quand quelqu'un y pense en cours de route.
+
 ---
 
 ## Étape 3 — Tableau d'analyse et snapshot
