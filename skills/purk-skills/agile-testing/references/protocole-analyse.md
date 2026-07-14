@@ -12,6 +12,20 @@ Ce protocole s'applique **peu importe qui lance la conversation** — développe
 
 Extraire du besoin (ticket, story, description de feature) la liste complète des critères d'acceptation. Chaque critère devra apparaître dans le tableau — aucun ne peut rester en dehors.
 
+Trois angles morts reviennent souvent à cette étape si on se limite au texte du besoin. Les vérifier systématiquement avant de passer à l'étape 2 :
+
+### Balayage par capture d'écran / maquette
+
+Le texte d'un ticket ne décrit jamais l'intégralité de ce qu'une interface expose. Quand des captures d'écran, maquettes ou un environnement de démo sont disponibles, les parcourir élément par élément (boutons, cases à cocher, états visuels, libellés, menus) et se demander pour chacun : *« est-ce couvert par un critère d'acceptation existant? »*. Sur une analyse réelle (LOG-124, portail patient LeoMed), une majorité des critères ajoutés en cours de route provenaient de cette lecture visuelle — pas du texte des tickets. Ne pas traiter la capture d'écran comme un simple support illustratif : c'est une source de critères d'acceptation à part entière.
+
+### Cohérence inter-vues
+
+Si une même donnée est affichée dans plusieurs écrans, onglets, ou rôles utilisateurs (ex. un statut visible à la fois côté patient et côté staff, ou une liste affichée dans deux vues filtrées différemment), ajouter explicitement un critère d'acceptation de **synchronisation entre ces vues** — pas seulement un critère par vue prise isolément. C'est un angle mort classique quand l'analyse est organisée feature par feature : chaque vue est testée séparément, mais rien ne vérifie qu'une action posée dans l'une se reflète correctement dans l'autre.
+
+### Traçabilité épique → tickets enfants
+
+Quand le besoin est un ticket enfant d'un épique (ou que l'épique lui-même est analysé), tracer **chaque point du besoin décrit dans l'épique** vers soit un critère du tableau, soit un ticket enfant qui le couvre explicitement. Ne jamais supposer qu'un épique est intégralement couvert par la simple existence de tickets enfants — certains points de l'épique (souvent des exigences transversales : navigation, en-tête, authentification de base) n'ont parfois aucun enfant dédié et passent inaperçus jusqu'à une relecture explicite de l'épique.
+
 ## Étape 2 — Construire le tableau
 
 ### Colonnes obligatoires (tout projet)

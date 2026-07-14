@@ -4,6 +4,12 @@ Suit l'évolution du **contenu** de ce skill (méthodologie, structure interne, 
 
 ## [Non publié]
 
+### LOG-159 — Techniques issues de l'analyse QA du portail patient (LOG-124)
+
+- `references/protocole-analyse.md` (Étape 1) : ajout de trois techniques — balayage par capture d'écran/maquette, vérification de cohérence inter-vues, traçabilité épique → tickets enfants.
+- `contextes/leomed/CONTEXTE.md` : ajout d'une section Q4 (sécurité/performance) propre à LeoMed — sécurité non différée même en V1, performance différée mais mesures de référence encouragées — documentée comme ajustement explicite au RACI racine, pas une généralisation.
+- `contextes/leomed/CONTEXTE.md` : ajout d'une checklist bilinguisme FR/EN — distincte de la langue du code des tests, couvre l'interface, les clés de traduction, le contenu des courriels et la revue de troncature visuelle.
+
 ## 2026-07-06 — Intégration au repo partagé
 
 - Le skill rejoint le repo `claude-tooling` sous `skills/purk-skills/agile-testing/`, activable par lien symbolique plutôt que copié directement dans `~/.claude/skills/`.
