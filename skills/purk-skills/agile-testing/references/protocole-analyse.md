@@ -26,6 +26,24 @@ Si une même donnée est affichée dans plusieurs écrans, onglets, ou rôles ut
 
 Quand le besoin est un ticket enfant d'un épique (ou que l'épique lui-même est analysé), tracer **chaque point du besoin décrit dans l'épique** vers soit un critère du tableau, soit un ticket enfant qui le couvre explicitement. Ne jamais supposer qu'un épique est intégralement couvert par la simple existence de tickets enfants — certains points de l'épique (souvent des exigences transversales : navigation, en-tête, authentification de base) n'ont parfois aucun enfant dédié et passent inaperçus jusqu'à une relecture explicite de l'épique.
 
+### Combinaison de règles et double couche
+
+Une fois les critères identifiés isolément, repasser la liste en cherchant trois pièges
+qui n'apparaissent qu'à la combinaison des règles, jamais à leur lecture isolée.
+**Séquence** : deux règles applicables en cascade sur la même donnée (ex. accumulation
+puis changement de configuration) doivent être testées en composition — avec un résultat
+attendu précis, dans les deux ordres si les deux sont possibles — pas seulement chacune
+isolément. **Double écriture** : toute règle qui écrit à deux endroits (valeur courante +
+historique/audit) exige un test explicite par destination ; ne jamais assumer qu'un test
+sur la valeur courante couvre implicitement l'audit. **Réactivité d'interface** : un AC qui
+décrit un comportement conditionnel visible (désactivation, disparition, tooltip) exige un
+test backend (intégrité de la donnée qui pilote la condition) et un test frontend séparé
+(réactivité visible) — jamais un seul des deux pour couvrir l'AC en entier. Ex. :
+« 3 tentatives échouées → champ désactivé + log de sécurité » demande un test de
+composition (reset de compteur entre 2 échecs), un test par destination d'écriture
+(compteur ET entrée de log), et un test backend + un test frontend pour la désactivation
+visible.
+
 ## Étape 2 — Construire le tableau
 
 ### Colonnes obligatoires (tout projet)
